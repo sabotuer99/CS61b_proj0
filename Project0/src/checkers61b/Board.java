@@ -2,14 +2,33 @@ package checkers61b;
 
 public class Board {
     /** Location of pieces. */
-    private static boolean[][] pieces;
+    private Piece[][] pieces;
 
     public Board(boolean shouldBeEmpty){
-    	
+    	if(!shouldBeEmpty){
+    		pieces = new Piece[8][8];
+    		boolean isFire = true;
+    		//rows
+    		for(int i = 0; i < 8; i += 1){
+    			if(i >= 3)
+    				isFire = false;
+    			//columns
+    			for(int j = 0; j < 8; j += 1){
+    				if((i <= 2 || i >= 5) && (i + j)%2 == 0){
+    					String type = "pawn";
+    					if(i == 2 || i == 5)
+    						type = "bomb";
+    					if(i == 1 || i == 6)
+    						type = "shield";
+    					pieces[j][i] = new Piece(isFire, this, j, i, type);
+    				}
+    			}
+    		}
+    	}
     }
     
     public Piece pieceAt(int x, int y){
-    	return null;
+    	return pieces[x][y];
     }
     
     public boolean canSelect(int x, int y){
@@ -50,9 +69,9 @@ public class Board {
                 else                  StdDrawPlus.setPenColor(StdDrawPlus.RED);
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
                 StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-                if (pieces[i][j]) {
-                    StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire-crowned.png", 1, 1);
-                }
+                //if (pieces[i][j]) {
+                //    StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire-crowned.png", 1, 1);
+                //}
             }
         }
     }
@@ -61,7 +80,7 @@ public class Board {
         int N = 8;
         StdDrawPlus.setXscale(0, N);
         StdDrawPlus.setYscale(0, N);
-        pieces = new boolean[N][N];
+        //pieces = new boolean[N][N];
 
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
@@ -70,7 +89,7 @@ public class Board {
             if (StdDrawPlus.mousePressed()) {
                 double x = StdDrawPlus.mouseX();
                 double y = StdDrawPlus.mouseY();
-                pieces[(int) x][(int) y] = true;
+                //pieces[(int) x][(int) y] = true;
             }            
             StdDrawPlus.show(100);
         }

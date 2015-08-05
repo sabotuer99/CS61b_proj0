@@ -23,6 +23,10 @@ public class Piece {
 		return this.isKing;
 	}
 	
+	public boolean isBomb(){
+		return "bomb".equals(type);
+	}
+	
 	public boolean isShield(){
 		return "shield".equals(type);
 	}
