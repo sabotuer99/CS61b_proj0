@@ -41,12 +41,12 @@ public class BoardTest {
 		Piece p44 = sut.pieceAt(4, 4);
 		
 		//Assert
-		assertTrue(!p00.isBomb() && !p00.isShield() && !p00.isFire());
-		assertTrue(!p77.isBomb() && !p77.isShield() && p77.isFire());
-		assertTrue(!p11.isBomb() && p11.isShield() && !p11.isFire());
-		assertTrue(!p66.isBomb() && p66.isShield() && p66.isFire());
-		assertTrue(p22.isBomb() && !p22.isShield() && !p22.isFire());
-		assertTrue(p55.isBomb() && !p55.isShield() && p55.isFire());
+		assertTrue(!p00.isBomb() && !p00.isShield() && p00.isFire());
+		assertTrue(!p77.isBomb() && !p77.isShield() && !p77.isFire());
+		assertTrue(!p11.isBomb() && p11.isShield() && p11.isFire());
+		assertTrue(!p66.isBomb() && p66.isShield() && !p66.isFire());
+		assertTrue(p22.isBomb() && !p22.isShield() && p22.isFire());
+		assertTrue(p55.isBomb() && !p55.isShield() && !p55.isFire());
 		assertNull(p33);
 		assertNull(p44);
 

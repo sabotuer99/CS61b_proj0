@@ -120,4 +120,52 @@ public class PieceTest {
 		//Assert
 		assertFalse(result);
 	}
+	
+	@Test 
+	public void isBomb_TypeIsShield_ReturnsFalse(){
+		//Arrange
+		Piece sut = new Piece(false, null, 0, 0, "shield");
+		
+		//Act
+		boolean result = sut.isBomb();
+		
+		//Assert
+		assertFalse(result);
+	}
+	
+	@Test 
+	public void isBomb_TypeIsPawn_ReturnsFalse(){
+		//Arrange
+		Piece sut = new Piece(false, null, 0, 0, "pawn");
+		
+		//Act
+		boolean result = sut.isBomb();
+		
+		//Assert
+		assertFalse(result);
+	}
+	
+	@Test 
+	public void isBomb_TypeIsBomb_ReturnsTrue(){
+		//Arrange
+		Piece sut = new Piece(false, null, 0, 0, "bomb");
+		
+		//Act
+		boolean result = sut.isBomb();
+		
+		//Assert
+		assertTrue(result);
+	}
+	
+	@Test 
+	public void isBomb_TypeIsNull_ReturnsFalse(){
+		//Arrange
+		Piece sut = new Piece(false, null, 0, 0, null);
+		
+		//Act
+		boolean result = sut.isBomb();
+		
+		//Assert
+		assertFalse(result);
+	}
 }
