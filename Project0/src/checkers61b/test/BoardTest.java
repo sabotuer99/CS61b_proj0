@@ -49,6 +49,42 @@ public class BoardTest {
 		assertTrue(p55.isBomb() && !p55.isShield() && !p55.isFire());
 		assertNull(p33);
 		assertNull(p44);
-
+	}
+	
+	@Test
+	public void canSelect_FirstMoveFirePlayerFirePiece_True() {
+		//Arrange
+		Board sut = new Board(false);
+		
+		//Act
+		boolean result = sut.canSelect(0,0);
+		
+		//Assert
+		assertTrue(result);
+	}
+	
+	@Test
+	public void canSelect_FirstMoveFirePlayerWaterPiece_False() {
+		//Arrange
+		Board sut = new Board(false);
+		
+		//Act
+		boolean result = sut.canSelect(7,7);
+		
+		//Assert
+		assertFalse(result);
+	}
+	
+	@Test
+	public void canSelect_SelectedPiece_false(){
+		//Arrange
+		Board sut = new Board(false);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result = sut.canSelect(0,0);
+		
+		//Assert
+		assertFalse(result);
 	}
 }

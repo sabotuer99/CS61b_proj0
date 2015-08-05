@@ -3,6 +3,9 @@ package checkers61b;
 public class Board {
     /** Location of pieces. */
     private Piece[][] pieces;
+    private int currentSide = 0; //fire team starts
+    private Piece selectedPiece;
+    private boolean hasMoved;
 
     public Board(boolean shouldBeEmpty){
     	if(!shouldBeEmpty){
@@ -32,11 +35,24 @@ public class Board {
     }
     
     public boolean canSelect(int x, int y){
-    	return false;
+    	boolean result = false;
+    	Piece piece = pieceAt(x,y);
+    	
+    	//if no piece is selected, or a piece is selected but hasn't moved
+    	//then a select may be possible...
+    	if( selectedPiece != null || 
+    	   (selectedPiece != null && !hasMoved)){
+    		
+        	if(	piece != null && piece.side() == currentSide ){
+        		result = true;
+        	}
+    	}
+    	
+    	return result;
     }
     
     public void select(int x, int y){
-    	
+    	selectedPiece = pieceAt(x, y);
     }
     
     public void place(int x, int y){
