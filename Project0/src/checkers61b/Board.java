@@ -5,11 +5,11 @@ public class Board {
     private Piece[][] pieces;
     private int currentSide = 0; //fire team starts
     private Piece selectedPiece;
-    private boolean hasMoved;
+    private boolean hasMoved = false;
 
     public Board(boolean shouldBeEmpty){
+    	pieces = new Piece[8][8];
     	if(!shouldBeEmpty){
-    		pieces = new Piece[8][8];
     		boolean isFire = true;
     		//rows
     		for(int i = 0; i < 8; i += 1){
@@ -35,12 +35,16 @@ public class Board {
     }
     
     public boolean canSelect(int x, int y){
+    	//can only select even squares
+    	if( (x + y)%2 != 0 )
+    		return false;
+    	
     	boolean result = false;
     	Piece piece = pieceAt(x,y);
     	
     	//if no piece is selected, or a piece is selected but hasn't moved
     	//then a select may be possible...
-    	if( selectedPiece != null || 
+    	if( selectedPiece == null || 
     	   (selectedPiece != null && !hasMoved)){
     		
         	if(	piece != null && piece.side() == currentSide ){
@@ -55,12 +59,21 @@ public class Board {
     	selectedPiece = pieceAt(x, y);
     }
     
-    public void place(int x, int y){
-    	
+    public void place(Piece p, int x, int y){
+    	if(x >= 8 || x < 0 || y >= 8 || y < 0 || (x+y)%2 != 0)
+    		return;
+    	pieces[x][y] = p;
     }
     
     public Piece remove(int x, int y){
-    	return null;
+    	if(x >= 8 || x < 0 || y >= 8 || y < 0 || (x+y)%2 != 0)
+    		return null;
+    	else {
+    		Piece p = pieceAt(x, y);
+    		pieces[x][y] = null;
+    		return p;
+    	}
+    		
     }
     
     public boolean canEndTurn(){
