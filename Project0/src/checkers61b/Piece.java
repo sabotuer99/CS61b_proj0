@@ -46,6 +46,9 @@ public class Piece {
 			board.remove((x + this.x)/2, (y + this.y)/2);
 			movePiece(x, y);
 			hasCaptured = true;
+			
+			if(isBomb())
+				explode(x, y);
 		}
 		
 		if((side() == 0 && y == 7) || (side() == 1 && y == 0))
@@ -57,6 +60,20 @@ public class Piece {
 		this.x = x;
 		this.y = y;
 		board.place(this, this.x, this.y);
+	}
+	
+	private void explode(int x, int y){
+		int atx, aty;
+		
+		for(int i = 0; i < 4; i += 1){
+			atx = i < 2 ? x - 1 : x + 1;
+			aty = i % 2 == 0 ? y - 1 : y + 1;			
+			Piece piece = board.pieceAt(atx, aty);
+			if(piece != null && !piece.isShield())
+				board.remove(atx, aty);
+		}
+		
+		board.remove(x, y);
 	}
 	
 	public boolean hasCaptured(){

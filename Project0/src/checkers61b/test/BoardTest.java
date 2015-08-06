@@ -362,4 +362,23 @@ public class BoardTest {
 		assertTrue(result);
 	}
 
+	@Test
+	public void canSelect_CaptureAttemptDestinationOccupied_False(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece fire = new Piece(true, sut, 0, 0, "pawn");
+		Piece water1 = new Piece(false, sut, 0, 0, "pawn");
+		Piece water2 = new Piece(false, sut, 0, 0, "pawn");
+		sut.place(fire, 0, 0);
+		sut.place(water1, 1, 1);
+		sut.place(water2, 2, 2);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result = sut.canSelect(2, 2);
+		
+		//Assert
+		assertFalse(result);
+	}
+	
 }

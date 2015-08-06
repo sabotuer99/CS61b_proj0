@@ -219,4 +219,57 @@ public class PieceTest {
 		assertTrue(sut.isKing());
 	}
 	
+	@Test
+	public void move_BombCapture_RemovesSurroundingPawnsAndBombs(){
+		//Arrange
+		Board board = new Board(true);
+		Piece sut = new Piece(true, board, 6, 0, "bomb");
+		Piece firePawn = new Piece(true, board, 6, 0, "pawn");
+		Piece fireBomb = new Piece(true, board, 6, 0, "bomb");
+		Piece waterPawn = new Piece(false, board, 6, 0, "pawn");
+		Piece waterBomb = new Piece(false, board, 6, 0, "bomb");
+		
+		board.place(sut, 0, 0);
+		board.place(firePawn, 3, 1);
+		board.place(fireBomb, 3, 3);
+		board.place(waterPawn, 1, 1);
+		board.place(waterBomb, 1, 3);
+		
+		//Act
+		sut.move(2,2);
+		
+		//Assert
+		assertNull(board.pieceAt(3,3));
+		assertNull(board.pieceAt(1,3));
+		assertNull(board.pieceAt(1,1));
+		assertNull(board.pieceAt(3,1));
+		assertNull(board.pieceAt(2,2));
+	}
+	
+	@Test
+	public void move_BombCapture_DoesNotRemoveShields(){
+		//Arrange
+		Board board = new Board(true);
+		Piece sut = new Piece(true, board, 0, 0, "bomb");
+		Piece fire1 = new Piece(true, board, 3, 1, "shield");
+		Piece fire2 = new Piece(true, board, 3, 3, "shield");
+		Piece water1 = new Piece(false, board, 1, 1, "shield");
+		Piece water2 = new Piece(false, board, 1, 3, "shield");
+		
+		board.place(sut, 0, 0);
+		board.place(fire1, 3, 1);
+		board.place(fire2, 3, 3);
+		board.place(water1, 1, 1);
+		board.place(water2, 1, 3);
+		
+		//Act
+		sut.move(2,2);
+		
+		//Assert
+		assertEquals(board.pieceAt(3,3), fire2);
+		assertEquals(board.pieceAt(1,3), water2);
+		assertEquals(board.pieceAt(3,1), fire1);
+		assertNull(board.pieceAt(1,1));
+		assertNull(board.pieceAt(2,2));
+	}
 }
