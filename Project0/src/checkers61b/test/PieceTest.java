@@ -203,4 +203,20 @@ public class PieceTest {
 		assertNull(board.pieceAt(1, 1));
 		assertTrue(sut.hasCaptured());
 	}
+	
+	@Test
+	public void move_MoveToLastRow_ChangesToKing(){
+		//Arrange
+		Board board = new Board(true);
+		Piece sut = new Piece(true, board, 6, 0, "pawn");
+		board.place(sut, 0, 6);
+		
+		//Act
+		sut.move(1,7);
+		
+		//Assert
+		assertEquals(board.pieceAt(1, 7), sut);
+		assertTrue(sut.isKing());
+	}
+	
 }

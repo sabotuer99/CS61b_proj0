@@ -64,6 +64,18 @@ public class BoardTest {
 	}
 	
 	@Test
+	public void pieceAt_OutOfBounds_returnsNull(){
+		//Arrange		
+		Board sut = new Board(false);
+		
+		//Act
+		Piece piece = sut.pieceAt(-1, -1);
+		
+		//Assert
+		assertNull(piece);
+	}
+	
+	@Test
 	public void canSelect_FirstMoveFirePlayerFirePiece_True() {
 		//Arrange
 		Board sut = new Board(false);
@@ -141,6 +153,26 @@ public class BoardTest {
 		
 		//Assert
 		assertTrue(result);
+	}
+	
+	@Test
+	public void canSelect_FireMovedAlready_False(){
+		//Arrange
+		Board sut = new Board(true);
+		sut.place(new Piece(true, sut, 0, 0, "bomb"), 0, 0);
+		sut.place(new Piece(true, sut, 2, 0, "bomb"), 2, 0);
+		sut.select(0, 0);
+		sut.select(1, 1);
+		
+		//Act
+		boolean result1 = sut.canSelect(1,1);
+		boolean result2 = sut.canSelect(2,0);
+		boolean result3 = sut.canSelect(0,0);
+		
+		//Assert
+		assertFalse(result1);
+		assertFalse(result2);
+		assertFalse(result3);
 	}
 	
 	@Test
@@ -276,6 +308,58 @@ public class BoardTest {
 		assertNull(result);		
 	}
 	
-
+	@Test
+	public void select_SelectPieceSelectSpace_MovePiece(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece piece = new Piece(true, sut, 0, 0, "bomb");
+		sut.place(piece, 0, 0);
+		
+		//Act
+		sut.select(0, 0);
+		sut.select(1, 1);
+		
+		//Assert
+		assertNull(sut.pieceAt(0, 0));
+		assertEquals(sut.pieceAt(1, 1), piece);
+	}
+	
+	@Test
+	public void canSelect_PieceHasCapturedSelectInvalidCaptureDestination_False(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece fire = new Piece(true, sut, 0, 0, "pawn");
+		Piece water = new Piece(false, sut, 0, 0, "pawn");
+		sut.place(fire, 0, 0);
+		sut.place(water, 1, 1);
+		sut.select(0, 0);
+		sut.select(2, 2);
+		
+		//Act
+		boolean result = sut.canSelect(3, 3);
+		
+		//Assert
+		assertFalse(result);
+	}
+	
+	@Test
+	public void canSelect_PieceHasCapturedSelectValidCaptureDestination_True(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece fire = new Piece(true, sut, 0, 0, "pawn");
+		Piece water1 = new Piece(false, sut, 0, 0, "pawn");
+		Piece water2 = new Piece(false, sut, 0, 0, "pawn");
+		sut.place(fire, 0, 0);
+		sut.place(water1, 1, 1);
+		sut.place(water2, 3, 3);
+		sut.select(0, 0);
+		sut.select(2, 2);
+		
+		//Act
+		boolean result = sut.canSelect(4, 4);
+		
+		//Assert
+		assertTrue(result);
+	}
 
 }

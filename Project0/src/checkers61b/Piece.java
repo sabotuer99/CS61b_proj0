@@ -47,6 +47,9 @@ public class Piece {
 			movePiece(x, y);
 			hasCaptured = true;
 		}
+		
+		if((side() == 0 && y == 7) || (side() == 1 && y == 0))
+			this.isKing = true;
 	}
 	
 	private void movePiece(int x, int y){

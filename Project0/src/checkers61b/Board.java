@@ -32,6 +32,8 @@ public class Board {
     }
     
     public Piece pieceAt(int x, int y){
+    	if (!inBounds(x, y))
+    		return null;
     	return pieces[x][y];
     }
     
@@ -63,6 +65,15 @@ public class Board {
             }
     	}
     	
+    	if(selectedPiece != null && hasMoved){
+			if(selectedPiece.isKing()){
+				result = canCapture(x, y, result, piece, 0);
+				result = canCapture(x, y, result, piece, 1);
+			} else {
+				result = canCapture(x, y, result, piece, currentSide);
+			}
+    	}
+    	
     	return result;
     }
 
@@ -73,16 +84,28 @@ public class Board {
 	}
 
 	private boolean canMoveOrCapture(int x, int y, boolean result, Piece piece, int side) {
-		int direction;
-		if(side == 0)
-			direction = 1;
-		else
-			direction = -1;
+		int direction = getDirection(side);
 		
 		//can select empty space diagonally
 		if( piece == null && Math.abs(x - selectedPieceX) == 1 && y - selectedPieceY == 1 * direction ){
 			result = true;
 		}
+		
+		result = canCapture(x, y, result, piece, side);
+		return result;
+	}
+
+	private int getDirection(int side) {
+		int direction;
+		if(side == 0)
+			direction = 1;
+		else
+			direction = -1;
+		return direction;
+	}
+
+	private boolean canCapture(int x, int y, boolean result, Piece piece, int side) {
+		int direction = getDirection(side);
 		
 		if( piece == null && Math.abs(x - selectedPieceX) == 2 && y - selectedPieceY == 2 * direction ){
 			Piece captureCandidate = pieceAt((x + selectedPieceX)/2, (y + selectedPieceY)/2);
@@ -94,9 +117,17 @@ public class Board {
 	}
     
     public void select(int x, int y){
-    	selectedPiece = pieceAt(x, y);
-    	selectedPieceX = x;
-    	selectedPieceY = y;
+    	if(selectedPiece == null){
+        	selectedPiece = pieceAt(x, y);
+        	selectedPieceX = x;
+        	selectedPieceY = y;
+    	} else {
+    		selectedPiece.move(x, y);
+        	selectedPieceX = x;
+        	selectedPieceY = y;
+        	hasMoved = true;
+    	}
+
     }
     
     public void place(Piece p, int x, int y){
@@ -125,11 +156,16 @@ public class Board {
     }
     
     public boolean canEndTurn(){
-    	return false;
+    	return hasMoved;
     }
     
     public void endTurn(){
+    	//flip sides
+    	currentSide = currentSide ^ 1;
     	
+    	hasMoved = false;
+    	selectedPiece.doneCapturing();
+    	selectedPiece = null;
     }
     
     public String winner(){
