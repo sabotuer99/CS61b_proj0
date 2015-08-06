@@ -1,4 +1,9 @@
+package checkers61b.test;
+
 import org.junit.Test;
+
+import checkers61b.Board;
+import checkers61b.Piece;
 import static org.junit.Assert.*;
 /** 
  *  @author Josh Hug
@@ -82,15 +87,15 @@ public class MisconceptionTests {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println("This file tests common misconceptions" +
-            " as observed by Josh (and any TAs who edit this file).");
-        System.out.println("If you fail any tests, " +
-            " start by fixing test 1, then 2, and so on.");
-        System.out.println("Due to JUnit limitations, they may run out of order.");
-
-        jh61b.junit.textui.runClasses(MisconceptionTests.class);      
-    }
+//    public static void main(String[] args) {
+//        System.out.println("This file tests common misconceptions" +
+//            " as observed by Josh (and any TAs who edit this file).");
+//        System.out.println("If you fail any tests, " +
+//            " start by fixing test 1, then 2, and so on.");
+//        System.out.println("Due to JUnit limitations, they may run out of order.");
+//
+//        jh61b.junit.textui.runClasses(MisconceptionTests.class);      
+//    }
 
     /* Special class that spies on your game. */
     public static class SpyBoard extends Board {

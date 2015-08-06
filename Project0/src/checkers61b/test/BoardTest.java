@@ -115,6 +115,51 @@ public class BoardTest {
 	}
 	
 	@Test
+	public void canSelect_ValidCaptureMoveForFire_true(){
+		//Arrange
+		Board sut = new Board(true);
+		sut.place(new Piece(true, null, 0, 0, "bomb"), 0, 0);
+		sut.place(new Piece(false, null, 1, 1, "bomb"), 1, 1);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result = sut.canSelect(2,2);
+		
+		//Assert
+		assertTrue(result);
+	}
+	
+	@Test
+	public void canSelect_ValidPieceMoveForFire_true(){
+		//Arrange
+		Board sut = new Board(true);
+		sut.place(new Piece(true, null, 0, 0, "bomb"), 0, 0);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result = sut.canSelect(1,1);
+		
+		//Assert
+		assertTrue(result);
+	}
+	
+	@Test
+	public void canSelect_InvalidPieceMoveForFire_false(){
+		//Arrange
+		Board sut = new Board(true);
+		sut.place(new Piece(true, null, 0, 0, "bomb"), 0, 0);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result1 = sut.canSelect(2,2);
+		boolean result2 = sut.canSelect(1,7);
+		
+		//Assert
+		assertFalse(result1);
+		assertFalse(result2);
+	}
+	
+	@Test
 	public void place_DestinationOutOfBounds_doesNothing(){
 		//Arrange
 		Board sut = new Board(true);
@@ -202,8 +247,7 @@ public class BoardTest {
 		Piece result = sut.remove(0, 0);
 		
 		//Assert
-		assertEquals(piece, result);
-				
+		assertEquals(piece, result);		
 	}
 	
 	@Test
@@ -217,8 +261,21 @@ public class BoardTest {
 		sut.remove(0, 0);
 		
 		//Assert
-		assertNull(sut.pieceAt(0, 0));
-				
+		assertNull(sut.pieceAt(0, 0));	
 	}
+	
+	@Test
+	public void remove_DestinationIsEmpty_returnsNull(){
+		//Arrange
+		Board sut = new Board(true);
+		
+		//Act
+		Piece result = sut.remove(0, 0);
+		
+		//Assert
+		assertNull(result);		
+	}
+	
+
 
 }
