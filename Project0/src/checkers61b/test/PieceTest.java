@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import checkers61b.Board;
 import checkers61b.Piece;
 
 public class PieceTest {
@@ -167,5 +168,39 @@ public class PieceTest {
 		
 		//Assert
 		assertFalse(result);
+	}
+	
+	@Test
+	public void move_MoveToEmptySpace_success(){
+		//Arrange
+		Board board = new Board(true);
+		Piece sut = new Piece(false, board, 0, 0, "pawn");
+		board.place(sut, 0, 0);
+		
+		//Act
+		sut.move(1,1);
+		
+		//Assert
+		assertEquals(board.pieceAt(1, 1), sut);
+		assertNull(board.pieceAt(0, 0));
+	}
+	
+	@Test
+	public void move_CaptureMove_success(){
+		//Arrange
+		Board board = new Board(true);
+		Piece sut = new Piece(false, board, 0, 0, "pawn");
+		Piece opp = new Piece(true, board, 1, 1, "pawn");
+		board.place(sut, 0, 0);
+		board.place(opp, 1, 1);
+		
+		//Act
+		sut.move(2,2);
+		
+		//Assert
+		assertEquals(board.pieceAt(2, 2), sut);
+		assertNull(board.pieceAt(0, 0));
+		assertNull(board.pieceAt(1, 1));
+		assertTrue(sut.hasCaptured());
 	}
 }
