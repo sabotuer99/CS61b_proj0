@@ -254,6 +254,10 @@ public class Board {
             		board.endTurn();
             }
             
+            if(StdDrawPlus.isNPressed()){
+            	board = new Board(false);
+            }
+            
             StdDrawPlus.show(100);
         }
     }
