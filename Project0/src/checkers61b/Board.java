@@ -7,6 +7,7 @@ public class Board {
     private Piece selectedPiece;
     private int selectedPieceX, selectedPieceY;
     private boolean hasMoved = false;
+    private static Coord selectedCoord;
 
     public Board(boolean shouldBeEmpty){
     	pieces = new Piece[8][8];
@@ -47,7 +48,7 @@ public class Board {
     	
     	//if no piece is selected, or a piece is selected but hasn't moved
     	//then a select may be possible...
-    	if( selectedPiece == null || (selectedPiece != null && !hasMoved)){
+    	if( selectedPiece == null || (selectedPiece != null && !hasMoved && !selectedPiece.equals(piece))){
     		
         	if(	piece != null && piece.side() == currentSide ){
         		result = true;
@@ -117,7 +118,7 @@ public class Board {
 	}
     
     public void select(int x, int y){
-    	if(selectedPiece == null){
+    	if(selectedPiece == null || (pieceAt(x, y) != null && !hasMoved)){
         	selectedPiece = pieceAt(x, y);
         	selectedPieceX = x;
         	selectedPieceY = y;
@@ -166,6 +167,7 @@ public class Board {
     	hasMoved = false;
     	selectedPiece.doneCapturing();
     	selectedPiece = null;
+    	selectedCoord = null;
     }
     
     public String winner(){
@@ -175,13 +177,41 @@ public class Board {
         http://introcs.cs.princeton.edu/java/15inout/CheckerBoard.java.html
      */
 
-    private static void drawBoard(int N) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if ((i + j) % 2 == 0) StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
-                else                  StdDrawPlus.setPenColor(StdDrawPlus.RED);
+    private static void drawBoard(Board b, Coord c) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if ((i + j) % 2 == 0) {
+                	if( c != null && c.x == i && c.y == j)
+                		StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                	else
+                		StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
+                }
+                else                 
+                	StdDrawPlus.setPenColor(StdDrawPlus.RED);
                 StdDrawPlus.filledSquare(i + .5, j + .5, .5);
-                StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                
+                Piece piece = b.pieceAt(i, j);
+                if(piece != null){
+                	String fileName = "img/";
+                	if(piece.isBomb())
+                		fileName += "bomb";
+                	else if(piece.isShield())
+                		fileName += "shield";
+                	else
+                		fileName += "pawn";
+                	
+                	if(piece.isFire())
+                		fileName += "-fire";
+                	else
+                		fileName += "-water";
+                	
+                	if(piece.isKing())
+                		fileName += "-crowned";
+                	
+                	fileName += ".png";
+                	StdDrawPlus.picture(i + .5, j + .5, fileName, 1, 1);
+                }
+                	
                 //if (pieces[i][j]) {
                 //    StdDrawPlus.picture(i + .5, j + .5, "img/bomb-fire-crowned.png", 1, 1);
                 //}
@@ -189,8 +219,18 @@ public class Board {
         }
     }
 
+    private class Coord{
+    	public int x;
+    	public int y;
+    	public Coord(int x, int y){
+    		this.x = x;
+    		this.y = y;
+    	}
+    }
+    
     public static void main(String[] args) {
         int N = 8;
+        Board board = new Board(false);
         StdDrawPlus.setXscale(0, N);
         StdDrawPlus.setYscale(0, N);
         //pieces = new boolean[N][N];
@@ -198,12 +238,22 @@ public class Board {
         /** Monitors for mouse presses. Wherever the mouse is pressed,
             a new piece appears. */
         while(true) {
-            drawBoard(N);
+            drawBoard(board, selectedCoord);
             if (StdDrawPlus.mousePressed()) {
-                double x = StdDrawPlus.mouseX();
-                double y = StdDrawPlus.mouseY();
+                int x = (int) StdDrawPlus.mouseX();
+                int y = (int) StdDrawPlus.mouseY();
                 //pieces[(int) x][(int) y] = true;
-            }            
+                if(board.canSelect(x, y)){
+                	board.select(x, y);
+                	selectedCoord = board.new Coord(x, y);
+                }               	
+            }
+            
+            if(StdDrawPlus.isSpacePressed()){
+            	if(board.hasMoved)
+            		board.endTurn();
+            }
+            
             StdDrawPlus.show(100);
         }
     }

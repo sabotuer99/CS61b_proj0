@@ -381,4 +381,36 @@ public class BoardTest {
 		assertFalse(result);
 	}
 	
+	@Test
+	public void canSelect_PieceSelectedTestSamePiece_False(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece fire = new Piece(true, sut, 0, 0, "bomb");
+		sut.place(fire, 0, 0);
+		sut.select(0, 0);
+		
+		//Act
+		boolean result = sut.canSelect(0, 0);
+		
+		//Assert
+		assertFalse(result);
+	}
+	
+	@Test
+	public void select_ChangePieceSelected_PiecesUnchanged(){
+		//Arrange
+		Board sut = new Board(true);
+		Piece fire1 = new Piece(true, sut, 0, 0, "bomb");
+		Piece fire2 = new Piece(true, sut, 2, 0, "bomb");
+		sut.place(fire1, 0, 0);
+		sut.place(fire2, 2, 0);
+		
+		//Act
+		sut.select(0, 0);
+		sut.select(2, 0);
+		
+		//Assert
+		assertEquals(sut.pieceAt(0, 0), fire1);
+		assertEquals(sut.pieceAt(2, 0), fire2);
+	}
 }
